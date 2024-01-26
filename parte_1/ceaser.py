@@ -62,3 +62,12 @@ def simple_ceaser_decrypt(x, y):
             result = result + letra
 
     return result
+
+# Casos de uso para entrega
+mensaje = 'hola mundo como estan zebra'
+desplazamiento = 3
+cifrado = simple_ceaser_encrypt(mensaje, desplazamiento)
+print('mensaje original: ', mensaje)
+print('desplazamiento: ', desplazamiento)
+print('\nmensaje cifrado: ', cifrado)
+print('\nmensaje descifrado: ', simple_ceaser_decrypt(cifrado, desplazamiento))
