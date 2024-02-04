@@ -57,6 +57,64 @@ def bruteForce_afin_to_file(text, max_line_length):
                         # Si no hay inverso multiplicativo, simplemente continuamos con el siguiente b
                         continue
 
-# Supongamos que quieres un salto de línea cada 80 caracteres
+def calcular_distribucion(x):
+    alfabeto = 'abcdefghijklmnñopqrstuvwxyz'
+    frecuencias = dict.fromkeys(alfabeto, 0)
+    total_caracteres = 0
+
+    for letra in x.lower():
+        if letra in alfabeto:
+            frecuencias[letra] += 1
+            total_caracteres += 1
+
+    if total_caracteres == 0:
+        return {letra: 0 for letra in alfabeto}
+    else:
+        porcentajes = {letra: (freq / total_caracteres) * 100 for letra, freq in frecuencias.items()}
+        return porcentajes
+
+def diferencia_indices_max_probabilidad(distribucion):
+    alfabeto = 'abcdefghijklmnñopqrstuvwxyz'
+
+    # Encuentra las dos letras con mayor probabilidad
+    letras_max_prob = sorted(distribucion, key=distribucion.get, reverse=True)[:2]
+
+    # Encuentra los índices de esas letras en el alfabeto
+    indice_letra1 = alfabeto.index(letras_max_prob[0])
+    indice_letra2 = alfabeto.index(letras_max_prob[1])
+
+    # Calcula la diferencia entre los índices
+    diferencia = abs(indice_letra1 - indice_letra2)
+
+    return diferencia, letras_max_prob[0], letras_max_prob[1]
+
+
+def afin_brute_force_con_distribucion(file_path, max_line_length, inicio_a, inicio_b):
+    alfabeto = 'abcdefghijklmnñopqrstuvwxyz'
+    with open(file_path, 'r') as file:
+        cipher_text = file.read().lower()
+
+    output_file_path = 'Parte_B/resultados_afin_brute_force_con_distribucion.txt'
+    with open(output_file_path, 'w') as output_file:
+
+        for a in range(inicio_a, len(alfabeto)):
+            if es_coprimo(a, len(alfabeto)):
+                for b in range(inicio_b, len(alfabeto)):
+                    try:
+                        decrypted_text = afin_descifrar(cipher_text, a, b)
+                        output_file.write(f'Con las llaves a={a} y b={b}:\n\n')
+
+                        for j in range(0, len(decrypted_text), max_line_length):
+                            output_file.write('    ' + decrypted_text[j:j+max_line_length] + '\n')
+
+                        output_file.write('\n')
+                    except ValueError:
+                        continue
+
 max_line_length = 80
-bruteForce_afin_to_file(cipher_text, max_line_length)
+inicio_a = 23
+inicio_b = 7
+afin_brute_force_con_distribucion(file_path, max_line_length, inicio_a, inicio_b)
+
+
+# observacion el brute force con distribucion no sirve del todo bien
